@@ -3,8 +3,13 @@ from tkinter.font import Font
 from tkinter import scrolledtext
 import tkinter.ttk as ttk
 import file_tk as file
+<<<<<<< HEAD
 import tkinter as tk
 import files_properties_tk as fp
+=======
+import folder_tk as folder
+
+>>>>>>> 8cffb003147f4161f5fdfa3a05db598cd3a4f049
 def main_menu():
     main_window = Tk()
     main_window.title("LAB 10")
@@ -131,4 +136,69 @@ if __name__ == "__main__":
     main_menu()
 
 
+def folder_window(parent_window):
+    window = Toplevel(parent_window)  
+    window.title("FOLDERS MANAGEMENT")
+    window.minsize(width=310, height=530)
+    window.resizable(False, False)
 
+    font_title = Font(family="Arial", size=20)
+    font_button = Font(family="Arial", size=14)
+
+    #definimos y mostramos los widgets
+    Label(window, text="").pack()
+    Label(window, text="").pack()
+    Label(window, text="FOLDERS MANAGEMENT", font=font_title).pack()
+
+    #creamos un frame para contener el siguiente label y entry
+    frame = Frame(window)
+    frame.pack(padx=10, pady=10)
+
+    #def y colocar un label
+    label = Label(frame, text="Path/name: ")
+    label.pack(side=LEFT, padx=5)
+
+    #CREAMOS UN ENTRY
+    file_name = Entry(frame, width=60, font=Font(family="Arial", size=20))
+    file_name.config(state="disabled")
+    file_name.pack(side=LEFT, padx=5)
+
+    #crear widget Scrolledtext para mostrar el conenido del archivo
+    textArea = scrolledtext.ScrolledText(window, wrap="word", width=70, height=10, font=Font(family="Arial", size=20))
+    textArea.pack(padx=10, pady=10)
+
+    # -----------------------------------------------------------
+    # CORRECCIÓN DE LA LÓGICA DE BOTONES
+    # -----------------------------------------------------------
+    
+    # 1. Inicializar la lista de botones a controlar
+    buttons = []
+    initial_state = "disabled"
+
+    # 2. Definir los botones
+    openBtn = Button(window, text="Open folder", width=10, height=1, font=font_button, bd=3, command=lambda: folder.open_folder(window, file_name, textArea, buttons))
+    browseBtn = Button(window, text="Browse folder", width=10, height=1, font=font_button, bd=3, command=lambda: folder.browse_folder(window, file_name, textArea, buttons))
+    
+    # Botones que deben ser controlados (Inicialmente deshabilitados)
+    saveAsBtn = Button(window, text="Save folder as", width=10, height=1, font=font_button, bd=3, state=initial_state, command=lambda: folder.save_folder_as(window, file_name, textArea, buttons))
+    deleteBtn = Button(window, text="Delete folder", width=10, height=1, font=font_button, bd=3, state=initial_state, command=lambda: folder.delete_folder(window, file_name, textArea, buttons))
+    
+    clearBtn = Button(window, text="Clear", width=10, height=1, font=font_button, bd=3, command=lambda: folder.clear(window, file_name, textArea, buttons))
+    returnBtn = Button(window, text="CLose", width=10, height=1, font=font_button, bd=3, command= window.destroy)
+
+    # 3. Rellenar la lista de botones después de definirlos
+    buttons.append(saveAsBtn) # buttons[0]
+    buttons.append(deleteBtn) # buttons[1]
+    
+    # -----------------------------------------------------------
+
+    #mostrar por pantalla los widget
+    openBtn.pack(side = LEFT)
+    browseBtn.pack(side = LEFT)
+    saveAsBtn.pack(side = LEFT)
+    deleteBtn.pack(side = LEFT)
+    clearBtn.pack(side = LEFT)
+    returnBtn.pack(side = LEFT)
+    
+    #procedemos a iniciar la intefaz
+    window.mainloop()
