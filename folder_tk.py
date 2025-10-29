@@ -4,25 +4,26 @@ import tkinter as tk
 from tkinter import filedialog, messagebox
 from pathlib import Path
 from os import walk 
+from tkinter import simpledialog
 
 def open_folder(parent_window, file_name_entry, text_area, buttons):
-    # 1. Abre el diálogo para seleccionar una carpeta
-    # El resultado es la ruta de la carpeta seleccionada (string) o una cadena vacía si se cancela.
+    # Abre el dialogo para seleccionar una carpeta
+    # El resultado es la ruta de la carpeta seleccionada (string) o una cadena vacia si se cancela
     folder_path = filedialog.askdirectory(parent=parent_window, title="Select a folder")
 
     if folder_path:
-        # 2. Habilita y actualiza el campo de la ruta (Entry)
+        # Habilita y actualiza el campo de la ruta (Entry)
         file_name_entry.config(state="normal")
         file_name_entry.delete(0, 'end')
         file_name_entry.insert(0, folder_path)
         file_name_entry.config(state="disabled")
 
-        # 3. Muestra el contenido de la carpeta en el ScrolledText
-        text_area.delete('1.0', 'end')  # Limpiar el área de texto
+        # Muestra el contenido de la carpeta en el ScrolledText
+        text_area.delete('1.0', 'end')  # Limpiar el area de texto
         
         try:
             # Usamos os.walk para obtener el contenido del directorio
-            # next(walk(...)) solo obtiene el contenido del directorio actual (sin recursión)
+            # next(walk(...)) solo obtiene el contenido del directorio actual (sin recursion)
             current_dir, sub_dirs, files = next(walk(folder_path))
 
             output = f"Selected folder:\n{current_dir}\n\n"
@@ -56,24 +57,24 @@ def open_folder(parent_window, file_name_entry, text_area, buttons):
                 btn.config(state="disabled")
 
     else:
-        # Si se cancela la selección, asegúrate de que el área de texto esté limpia
-        # o muestra un mensaje de cancelación.
+        #Si se cancela la seleccion, el area de texto limpia
+        # o mensaje de cancelacion
         text_area.delete('1.0', 'end')
-        text_area.insert('1.0', "Folder selection cancelled.")
+        text_area.insert('1.0', "Folder selection cancelled")
         
         
 def browse_folder(parent_window, file_name_entry, text_area, buttons):
-    # 1. Abrir el diálogo para seleccionar una carpeta
+    # abrir el dialogo para seleccionar una carpeta
     folder_path = filedialog.askdirectory(parent=parent_window, title="Select folder to scan")
 
     if folder_path:
-        # 2. Actualizar el Entry con la ruta seleccionada
+        #actualizar el Entry con la ruta seleccionada
         file_name_entry.config(state="normal")
         file_name_entry.delete(0, 'end')
         file_name_entry.insert(0, folder_path)
         file_name_entry.config(state="disabled")
 
-        # 3. Limpiar el área de texto e iniciar el recorrido recursivo
+        # lmpiar el area de texto e iniciar el recorrido recursivo
         text_area.delete('1.0', 'end')
         output = f"Starting recursive scan in:\n**{folder_path}**\n\n"
         separator = "-" * 40 + "\n"
@@ -81,7 +82,7 @@ def browse_folder(parent_window, file_name_entry, text_area, buttons):
         try:
             # os.walk genera (dirpath, dirnames, filenames) para cada directorio
             for root, dirs, files in os.walk(folder_path):
-                # Generar una indentación para visualizar mejor la profundidad
+                # Generar una indentacion para visualizar mejor la profundidad
                 level = root.replace(folder_path, '').count(os.sep)
                 indent = ' ' * 4 * level
                 
@@ -96,7 +97,7 @@ def browse_folder(parent_window, file_name_entry, text_area, buttons):
                 if files:
                     output += f"{indent}    ∟ Files:    {', '.join(files)}\n"
 
-            # 4. Insertar la salida en el ScrolledText
+            # Insertar la salida en el ScrolledText
             text_area.insert('1.0', output)
             
             # Habilitar botones de control si es necesario
@@ -109,44 +110,44 @@ def browse_folder(parent_window, file_name_entry, text_area, buttons):
             text_area.insert('1.0', error_message)
             messagebox.showerror("Scan Error", error_message)
             
-            # Opcional: Deshabilitar botones en caso de error
+            #Deshabilitar botones en caso de error
             for btn in buttons:
                 btn.config(state="disabled")
 
     else:
-        # Si la selección es cancelada
+        # Si la seleccion es cancelada
         text_area.delete('1.0', 'end')
         text_area.insert('1.0', "Folder scan cancelled")
 
 def clear(parent_window, file_name_entry, text_area, buttons):
     
-    # 1. Limpiar el Entry (Campo de la ruta)
+    # Limpiar el Entry (Campo de la ruta)
     # Es necesario habilitarlo primero para poder modificar su contenido
     file_name_entry.config(state="normal")
     file_name_entry.delete(0, 'end')
     file_name_entry.config(state="disabled") # Devolver al estado original
 
-    # 2. Limpiar el ScrolledText (Área de contenido)
+    # Limpiar el ScrolledText (Area de contenido)
     text_area.delete('1.0', 'end')
     text_area.insert('1.0', "Folder manager reset")
 
-    # 3. Deshabilitar los Botones Controlados
+    # Deshabilitar los Botones Controlados
     # La lista 'buttons' contiene [saveAsBtn, deleteBtn]
     for btn in buttons:
         btn.config(state="disabled")
      
 def delete_folder(parent_window, file_name_entry, text_area, buttons):
     
-    # 1. Obtener la ruta del folder desde el Entry
-    # Primero, deshabilitamos el estado para poder leer el contenido.
+    # Obtener la ruta del folder desde el Entry
+    # Primero, deshabilitamos el estado para poder leer el contenido
     file_name_entry.config(state="normal")
     folder_path = file_name_entry.get().strip()
     file_name_entry.config(state="disabled") # Volvemos a deshabilitar
 
-    # Limpiar el área de texto antes de empezar
+    # Limpiar el area de texto antes de empezar
     text_area.delete('1.0', 'end') 
 
-    # 2. SE VERIFICA EXISTENCIA DEL FOLDER
+    # SE VERIFICA EXISTENCIA DEL FOLDER
     if not folder_path:
         text_area.insert('1.0', "ERROR: No folder path selected")
         messagebox.showerror("Error", "You must select a folder first")
@@ -157,20 +158,20 @@ def delete_folder(parent_window, file_name_entry, text_area, buttons):
         messagebox.showerror("Error", f"The folder '{folder_path}' does not exist")
         return
 
-    # 3. VERIFICAMOS SI EL USER QUIERE REALMENTE BORRAR (Diálogo de Confirmación)
+    # VERIFICAMOS SI EL USER QUIERE REALMENTE BORRAR (Dialogo de Confirmacion)
     confirmation = messagebox.askyesno(
         "Confirm Deletion",
         f"Do you really want to delete the folder '{folder_path}' and ALL its contents?\n\nThis action is irreversible!",
         icon='warning',
-        parent=parent_window # Para que el diálogo esté sobre la ventana hija
+        parent=parent_window # Para que el dialogo este sobre la ventana hija
     )
 
-    if confirmation: # confirmation es True si el usuario selecciona 'Sí'
+    if confirmation: # confirmation es True si el usuario selecciona 'Si'
         try:
             # BORRAMOS FOLDER Y CONTENIDO RECURSIVAMENTE
             shutil.rmtree(folder_path)
             
-            # Éxito: Actualizar la GUI
+            # Exito: Actualizar la GUI
             text_area.insert('1.0', f"Folder '{folder_path}' and its contents were successfully deleted")
             
             # Limpiar el Entry
@@ -183,10 +184,65 @@ def delete_folder(parent_window, file_name_entry, text_area, buttons):
                 btn.config(state="disabled")
             
         except Exception as e:
-            # Manejo de errores (ej. permisos insuficientes)
+            # Manejo de errores (ej permisos insuficientes)
             error_msg = f"ERROR deleting folder '{folder_path}': {e}"
             text_area.insert('1.0', error_msg)
             messagebox.showerror("Deletion Error", error_msg)
     
     else: # El usuario selecciona 'No'
         text_area.insert('1.0', f"Cancelled: Deletion of folder '{folder_path}' was cancelled by the user")
+
+def save_folder_as(parent_window, file_name_entry, text_area, buttons):
+    
+    # Opens the dialog for the user to choose the path and name of the NEW folder
+    # We use askdirectory. The user must create or select the destination folder
+    new_folder_path = filedialog.askdirectory(
+        parent=parent_window, 
+        title="Select the Location for the New Folder"
+    )
+
+    if new_folder_path:
+        # The askdirectory dialog returns the selected path
+        
+        # We ask the user for the name they want to give to the new folder
+        new_folder_name = simpledialog.askstring("Folder Name", "Enter the name of the new folder:")
+        
+        if new_folder_name:
+            # We build the full path of the new folder
+            final_path = os.path.join(new_folder_path, new_folder_name)
+            
+            # Clear the text area
+            text_area.delete('1.0', 'end')
+            
+            try:
+                # Folder creation. We use makedirs to create directories if they dont exist
+                os.makedirs(final_path, exist_ok=True) 
+                
+                # Success: Update the GUI
+                output = f"Folder successfully created in:\n{final_path}"
+                text_area.insert('1.0', output)
+                
+                # Update the Entry with the new path
+                file_name_entry.config(state="normal")
+                file_name_entry.delete(0, 'end')
+                file_name_entry.insert(0, final_path)
+                file_name_entry.config(state="disabled")
+
+                # Enable control buttons (if the application should work on this new path)
+                for btn in buttons:
+                    btn.config(state="normal")
+                
+            except Exception as e:
+                # Error handling
+                error_msg = f"ERROR trying to create the folder:\n{e}"
+                text_area.insert('1.0', error_msg)
+                messagebox.showerror("Creation Error", error_msg)
+        
+        else:
+            text_area.delete('1.0', 'end')
+            text_area.insert('1.0', "Folder creation cancelled (no name provided)")
+
+    else:
+        # If location selection is cancelled
+        text_area.delete('1.0', 'end')
+        text_area.insert('1.0', "Save as cancelled (no location selected)")
