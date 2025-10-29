@@ -77,8 +77,17 @@ def folder_menu():
             print("Press any key")
             input() #espera una tecla
         elif option == 2: 
-            #folder_menu()
-            print("")
+            name = input("Enter the path/folder name to open: ")
+            d = Folder(name)
+            d.browse()
+            print("Press any key")
+            input() #espera una tecla
+        elif option == 3:
+            name = input("Enter the path/folder name to delete: ")
+            d = Folder(name)
+            d.delete()
+            print("Press any key")
+            input() #espera una tecla
         elif option == 0:
             break
         else:
