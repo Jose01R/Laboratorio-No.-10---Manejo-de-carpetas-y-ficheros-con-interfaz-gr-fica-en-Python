@@ -42,22 +42,40 @@ def file_menu():
             name = input("Enter the path/file name to open: ")
             f = File(name)
             f.open()
-            print("Press any key")
-            input() #espera una tecla
+            input("Press Enter to continue...")
 
         elif option == 2: 
-            print("")
+            name = input("Enter the path/file name to write: ")
+            text = input("Enter the text to write: ")
+            f = File(name)
+            f.write(text)
+            input("Press Enter to continue...")
+
         elif option == 3:
-            print("")
+            name = input("Enter the path/file name to update: ")
+            text = input("Enter the text to append: ")
+            f = File(name)
+            f.update(text)
+            input("Press Enter to continue...")
+
         elif option == 4: 
-            print("")
+            source = input("Enter the path/source file name: ")
+            target = input("Enter the path/target file name: ")
+            f = File(source)
+            f.copy(target)
+            input("Press Enter to continue...")
+
         elif option == 5:
-            print("")
+            name = input("Enter the path/file name to delete: ")
+            f = File(name)
+            f.delete()
+            input("Press Enter to continue...")
+
         elif option == 0:
             break
         else:
             print("Invalid option. Try again")
-            sleep(2)    
+            sleep(2)  
 
 def folder_menu():
     while True:
