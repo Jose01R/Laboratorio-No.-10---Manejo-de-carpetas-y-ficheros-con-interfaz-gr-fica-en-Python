@@ -3,13 +3,10 @@ from tkinter.font import Font
 from tkinter import scrolledtext
 import tkinter.ttk as ttk
 import file_tk as file
-<<<<<<< HEAD
 import tkinter as tk
 import files_properties_tk as fp
-=======
 import folder_tk as folder
 
->>>>>>> 8cffb003147f4161f5fdfa3a05db598cd3a4f049
 def main_menu():
     main_window = Tk()
     main_window.title("LAB 10")
