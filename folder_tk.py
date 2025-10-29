@@ -22,7 +22,7 @@ def open_folder(parent_window, file_name_entry, text_area, buttons):
         text_area.delete('1.0', 'end')  # Limpiar el area de texto
         
         try:
-            # Usamos os.walk para obtener el contenido del directorio
+            #obtener el contenido del directorio
             # next(walk(...)) solo obtiene el contenido del directorio actual (sin recursion)
             current_dir, sub_dirs, files = next(walk(folder_path))
 
@@ -44,7 +44,7 @@ def open_folder(parent_window, file_name_entry, text_area, buttons):
 
             text_area.insert('1.0', output)
             
-            # Habilitar los botones que dependen de tener una carpeta seleccionada
+            #habilitar los botones que dependen de carpeta seleccionada
             for btn in buttons:
                 btn.config(state="normal")
 
@@ -80,7 +80,6 @@ def browse_folder(parent_window, file_name_entry, text_area, buttons):
         separator = "-" * 40 + "\n"
         
         try:
-            # os.walk genera (dirpath, dirnames, filenames) para cada directorio
             for root, dirs, files in os.walk(folder_path):
                 # Generar una indentacion para visualizar mejor la profundidad
                 level = root.replace(folder_path, '').count(os.sep)
@@ -97,20 +96,20 @@ def browse_folder(parent_window, file_name_entry, text_area, buttons):
                 if files:
                     output += f"{indent}    ∟ Files:    {', '.join(files)}\n"
 
-            # Insertar la salida en el ScrolledText
+            #Insertar la salida en el ScrolledText
             text_area.insert('1.0', output)
             
-            # Habilitar botones de control si es necesario
+            #habilitar botones de control 
             for btn in buttons:
                 btn.config(state="normal")
                 
         except Exception as e:
-            # Manejo de errores (por ejemplo, permisos denegados)
+            #Manejo de errores
             error_message = f"ERROR while traversing the directory:\n{e}"
             text_area.insert('1.0', error_message)
             messagebox.showerror("Scan Error", error_message)
             
-            #Deshabilitar botones en caso de error
+            #deshabilitar botones 
             for btn in buttons:
                 btn.config(state="disabled")
 
@@ -158,7 +157,7 @@ def delete_folder(parent_window, file_name_entry, text_area, buttons):
         messagebox.showerror("Error", f"The folder '{folder_path}' does not exist")
         return
 
-    # VERIFICAMOS SI EL USER QUIERE REALMENTE BORRAR (Dialogo de Confirmacion)
+    # VERIFICAMOS SI EL USER QUIERE REALMENTE BORRAR 
     confirmation = messagebox.askyesno(
         "Confirm Deletion",
         f"Do you really want to delete the folder '{folder_path}' and ALL its contents?\n\nThis action is irreversible!",
@@ -179,12 +178,12 @@ def delete_folder(parent_window, file_name_entry, text_area, buttons):
             file_name_entry.delete(0, 'end')
             file_name_entry.config(state="disabled")
 
-            # Deshabilitar botones que dependen de una carpeta existente
+            # Deshabilitar botones que dependen de carpeta existente
             for btn in buttons:
                 btn.config(state="disabled")
             
         except Exception as e:
-            # Manejo de errores (ej permisos insuficientes)
+            # Manejo de errores 
             error_msg = f"ERROR deleting folder '{folder_path}': {e}"
             text_area.insert('1.0', error_msg)
             messagebox.showerror("Deletion Error", error_msg)
@@ -194,46 +193,44 @@ def delete_folder(parent_window, file_name_entry, text_area, buttons):
 
 def save_folder_as(parent_window, file_name_entry, text_area, buttons):
     
-    # Opens the dialog for the user to choose the path and name of the NEW folder
-    # We use askdirectory. The user must create or select the destination folder
+    # Abre el dialog para que el user elija  ruta y  nombre de la NUEVA carpeta
+    # Usamos askdirectory. El usuario debe crear o seleccionar la carpeta de destino
     new_folder_path = filedialog.askdirectory(
         parent=parent_window, 
         title="Select the Location for the New Folder"
     )
 
     if new_folder_path:
-        # The askdirectory dialog returns the selected path
-        
-        # We ask the user for the name they want to give to the new folder
+        # askdirectory dialog devuelve ruta seleccionada
+
+        # Pedimos al usuario el nombre que quiere darle a la nueva carpeta
         new_folder_name = simpledialog.askstring("Folder Name", "Enter the name of the new folder:")
         
         if new_folder_name:
-            # We build the full path of the new folder
+            # Construimos la ruta completa de la nueva carpeta
             final_path = os.path.join(new_folder_path, new_folder_name)
             
-            # Clear the text area
+            # limpiamos text area
             text_area.delete('1.0', 'end')
             
             try:
-                # Folder creation. We use makedirs to create directories if they dont exist
+                # makedirs para crear directorios si no existe
                 os.makedirs(final_path, exist_ok=True) 
                 
-                # Success: Update the GUI
                 output = f"Folder successfully created in:\n{final_path}"
                 text_area.insert('1.0', output)
                 
-                # Update the Entry with the new path
+                #actualizamos entry con nuevo path
                 file_name_entry.config(state="normal")
                 file_name_entry.delete(0, 'end')
                 file_name_entry.insert(0, final_path)
                 file_name_entry.config(state="disabled")
 
-                # Enable control buttons (if the application should work on this new path)
+                # Habilitar botones
                 for btn in buttons:
                     btn.config(state="normal")
                 
             except Exception as e:
-                # Error handling
                 error_msg = f"ERROR trying to create the folder:\n{e}"
                 text_area.insert('1.0', error_msg)
                 messagebox.showerror("Creation Error", error_msg)
@@ -243,6 +240,6 @@ def save_folder_as(parent_window, file_name_entry, text_area, buttons):
             text_area.insert('1.0', "Folder creation cancelled (no name provided)")
 
     else:
-        # If location selection is cancelled
+        # Si se cancela la seleccin de ubicacin
         text_area.delete('1.0', 'end')
         text_area.insert('1.0', "Save as cancelled (no location selected)")
